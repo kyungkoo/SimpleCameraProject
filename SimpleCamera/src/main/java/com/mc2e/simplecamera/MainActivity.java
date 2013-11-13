@@ -77,6 +77,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         takePhoto();
     }
 
+    /**
+     * 기본 카메라 앱을 실행하는 메소드
+     */
     private void takePhoto() {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -88,6 +91,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         startActivityForResult(intent, CAPTURE_IMAGE);
     }
 
+    /**
+     * com.android.camera.action.CROP 을 통해 내장된 Crop App 을 호출하는 메소드.
+     * crop 후 결과값은 onActivityResult 를 통해 전달 받는다.
+     * @param status
+     */
     private void cropImage(int status) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(mImageCaptureUri, "image/*");
@@ -101,6 +109,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         startActivityForResult(intent, status);
     }
 
+    /**
+     * Crop 된 데이터를 Bitmap 으로 저장하는 메소드
+     * 저장된 Bitmap 은 후에 ImageView 에 추가하여 화면에 출력
+     * @param data
+     */
     private void saveImage(Intent data) {
 
         final Bundle extras = data.getExtras();
@@ -128,6 +141,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             f.delete();
     }
 
+    /*
+    카메라앱, Crop 앱을 통해 생성된 데이터를 전달받는 메소드
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -137,10 +153,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         switch(requestCode) {
 
+            // 카메라 앱 구동 후 사진 데이터를 Crop 앱으로 이동
             case CAPTURE_IMAGE:
                 cropImage(statusCode);
                 break;
 
+            // Crop 후 동작 정의
             case CROP_IMAGE_FRONT:
                 saveImage(data);
                 Toast.makeText(getApplicationContext(), "image saved.", Toast.LENGTH_SHORT).show();
