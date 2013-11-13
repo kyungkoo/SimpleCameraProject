@@ -1,7 +1,51 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame">
+
+    <Button
+        android:id="@+id/take_photo_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Take Photo"/>
+
+    <LinearLayout
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/take_photo_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:focusable="false">
+
+        <ImageView
+            android:focusable="false"
+            android:id="@+id/front_iv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#223344"
+            android:layout_marginRight="10dp" />
+
+        <ImageView
+            android:focusable="false"
+            android:id="@+id/left_iv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#225544"
+            android:layout_marginRight="10dp" />
+
+        <ImageView
+            android:focusable="false"
+            android:id="@+id/right_iv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#222244"/>
+    </LinearLayout>
+
+</RelativeLayout>
