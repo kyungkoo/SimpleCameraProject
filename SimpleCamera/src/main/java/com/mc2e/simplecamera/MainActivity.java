@@ -74,7 +74,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        takePhoto();
+        Intent intent = new Intent(getApplicationContext(), SimpleCameraActivity.class);
+        startActivity(intent);
+
+     //   takePhoto();
     }
 
     /**
