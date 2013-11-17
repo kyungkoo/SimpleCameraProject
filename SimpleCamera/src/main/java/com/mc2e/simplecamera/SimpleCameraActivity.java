@@ -37,7 +37,8 @@ public class SimpleCameraActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mSurfaceView.getCamera().takePicture(null, null, mPicture);
+                    //mSurfaceView.getCamera().takePicture(null, null, mPicture);
+                    takePicture();
                 }
                 return false;
             }
@@ -87,6 +88,23 @@ public class SimpleCameraActivity extends Activity {
             mSurfaceView.getCamera().startPreview();
         }
     };
+
+    private void takePicture() {
+
+        mSurfaceView.getCamera().autoFocus(new Camera.AutoFocusCallback() {
+
+            public void onAutoFocus(boolean success, Camera camera) {
+
+                if (success) {
+
+                    //mCamera.takePicture(null, null, null);
+                    mSurfaceView.getCamera().takePicture(null, null, mPicture);
+                }
+
+            }
+
+        });
+    }
 
     public byte[] bitmapToByteArray(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
