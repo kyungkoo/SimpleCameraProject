@@ -2,6 +2,7 @@ package com.mc2e.simplecamera;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,21 +21,12 @@ import java.io.File;
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
-    private static final int CAPTURE_IMAGE = 0;
-    private static final int CROP_IMAGE_FRONT = 1;
-    private static final int CROP_IMAGE_LEFT = 2;
-    private static final int CROP_IMAGE_RIGHT = 3;
+    private static final int CALL_CAMERA = 2002;
 
     private Bitmap mFrontBitmap, mLeftBitmap, mRightBitmap;
 
     private ImageView mFrontView, mLeftView, mRightView;
     private Button mTakePhotoBtn;
-
-    private Uri mImageCaptureUri;
-
-    // change status
-    //private String mCaptureStatus = "front";
-    private int statusCode = CROP_IMAGE_FRONT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,41 +67,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     public void onClick(View v) {
 
         Intent intent = new Intent(getApplicationContext(), SimpleCameraActivity.class);
-        startActivity(intent);
-
+        //startActivity(intent);
+        startActivityForResult(intent, CALL_CAMERA);
      //   takePhoto();
-    }
-
-    /**
-     * 기본 카메라 앱을 실행하는 메소드
-     */
-    private void takePhoto() {
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String url = "take_picture_temp.jpg";
-
-        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
-
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-        startActivityForResult(intent, CAPTURE_IMAGE);
-    }
-
-    /**
-     * com.android.camera.action.CROP 을 통해 내장된 Crop App 을 호출하는 메소드.
-     * crop 후 결과값은 onActivityResult 를 통해 전달 받는다.
-     * @param status
-     */
-    private void cropImage(int status) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(mImageCaptureUri, "image/*");
-
-        intent.putExtra("outputX", 90);
-        intent.putExtra("outputY", 90);
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        intent.putExtra("scale", true);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, status);
     }
 
     /**
@@ -119,29 +79,20 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
      */
     private void saveImage(Intent data) {
 
-        final Bundle extras = data.getExtras();
 
-        if(extras != null) {
-            Bitmap photo = extras.getParcelable("data");
 
-            switch(statusCode) {
-                case CROP_IMAGE_FRONT:
-                    mFrontBitmap = photo;
-                    break;
+        mFrontBitmap = BitmapFactory.decodeFile(data.getStringExtra("PATH1"));
+        mLeftBitmap = BitmapFactory.decodeFile(data.getStringExtra("PATH2"));
+        mRightBitmap = BitmapFactory.decodeFile(data.getStringExtra("PATH3"));
 
-                case CROP_IMAGE_LEFT:
-                    mLeftBitmap = photo;
-                    break;
 
-                case CROP_IMAGE_RIGHT:
-                    mRightBitmap = photo;
-                    break;
-            }
-        }
+        if (mFrontBitmap != null)
+            mFrontView.setImageBitmap(mFrontBitmap);
+        if (mLeftBitmap != null)
+            mLeftView.setImageBitmap(mLeftBitmap);
+        if (mRightBitmap != null)
+            mRightView.setImageBitmap(mRightBitmap);
 
-        File f = new File(mImageCaptureUri.getPath());
-        if(f.exists())
-            f.delete();
     }
 
     /*
@@ -156,33 +107,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         switch(requestCode) {
 
-            // 카메라 앱 구동 후 사진 데이터를 Crop 앱으로 이동
-            case CAPTURE_IMAGE:
-                cropImage(statusCode);
-                break;
-
-            // Crop 후 동작 정의
-            case CROP_IMAGE_FRONT:
+            case CALL_CAMERA:
                 saveImage(data);
-                Toast.makeText(getApplicationContext(), "image saved.", Toast.LENGTH_SHORT).show();
-                statusCode = CROP_IMAGE_LEFT;
-                takePhoto();
-                break;
-
-            case CROP_IMAGE_LEFT:
-                saveImage(data);
-                Toast.makeText(getApplicationContext(), "image saved.", Toast.LENGTH_SHORT).show();
-                statusCode = CROP_IMAGE_RIGHT;
-                takePhoto();
-                break;
-
-            case CROP_IMAGE_RIGHT:
-                saveImage(data);
-                Toast.makeText(getApplicationContext(), "image saved.", Toast.LENGTH_SHORT).show();
-
-                mFrontView.setImageBitmap(mFrontBitmap);
-                mLeftView.setImageBitmap(mLeftBitmap);
-                mRightView.setImageBitmap(mRightBitmap);
                 break;
         }
     }
