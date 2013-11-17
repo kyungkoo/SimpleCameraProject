@@ -24,6 +24,10 @@ public class SimpleCameraActivity extends Activity {
 
     private View mGuideView;
 
+    private int counter = 1;
+
+    private String path1, path2, path3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +51,7 @@ public class SimpleCameraActivity extends Activity {
 
     Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
-            String path = "/sdcard/DCIM/Camera/cameratest.jpg";
+            String path = "/sdcard/DCIM/Camera/test"+counter+".jpg";
 
             File file = new File(path);
             try {
@@ -55,7 +59,7 @@ public class SimpleCameraActivity extends Activity {
                 Bitmap factory = BitmapFactory.decodeByteArray(data, 0, data.length);
 
                 if(factory.getHeight() < factory.getWidth()){
-                    factory = SimpleBitmapEditor.imgRotate(factory);
+                    factory = SimpleBitmapEditor.imgRotate(factory, 90);
                 }
 
                 int width = mGuideView.getWidth();
@@ -67,6 +71,17 @@ public class SimpleCameraActivity extends Activity {
                 Bitmap resize = SimpleBitmapEditor.resizeBitmap(factory, totalHeight);
 
                 Bitmap croped = SimpleBitmapEditor.cropBitmapToSize(resize, width, height);
+
+                if (counter == 1) {
+                    path1 = path;
+                    counter ++;
+                }else if(counter == 2) {
+                    path2 = path;
+                    counter ++;
+                }else if (counter == 3) {
+                    path3 = path;
+                    counter ++;
+                }
 
                 FileOutputStream fos = new FileOutputStream(file);
 
@@ -85,7 +100,21 @@ public class SimpleCameraActivity extends Activity {
             sendBroadcast(intent);
 
             Toast.makeText(getApplicationContext(), "사진 저장 완료 : " + path, 0).show();
-            mSurfaceView.getCamera().startPreview();
+
+            if (counter == 4) {
+
+                Intent i = new Intent();
+                i.putExtra("PATH1", path1);
+                i.putExtra("PATH2", path2);
+                i.putExtra("PATH3", path3);
+
+                //i.putExtras(bundle);
+
+                setResult(RESULT_OK, i);
+                finish();
+            }else {
+                mSurfaceView.getCamera().startPreview();
+            }
         }
     };
 

@@ -62,12 +62,12 @@ public class SimpleBitmapEditor {
         return Bitmap.createBitmap(bitmap, x, y, cw, ch);
     }
 
-    public static Bitmap imgRotate(Bitmap bmp){
+    public static Bitmap imgRotate(Bitmap bmp, int rotate){
         int width = bmp.getWidth();
         int height = bmp.getHeight();
 
         Matrix matrix = new Matrix();
-        matrix.postRotate(90);
+        matrix.postRotate(rotate);
 
         Bitmap resizedBitmap = Bitmap.createBitmap(bmp, 0, 0, width, height, matrix, true);
         bmp.recycle();

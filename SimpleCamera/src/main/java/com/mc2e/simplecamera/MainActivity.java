@@ -83,8 +83,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         mFrontBitmap = BitmapFactory.decodeFile(data.getStringExtra("PATH1"));
         mLeftBitmap = BitmapFactory.decodeFile(data.getStringExtra("PATH2"));
+
+        // -90도 회전
+        mLeftBitmap = SimpleBitmapEditor.imgRotate(mLeftBitmap, -90);
+
         mRightBitmap = BitmapFactory.decodeFile(data.getStringExtra("PATH3"));
 
+        // 90 도 회전
+        mRightBitmap = SimpleBitmapEditor.imgRotate(mRightBitmap, 90);
 
         if (mFrontBitmap != null)
             mFrontView.setImageBitmap(mFrontBitmap);
