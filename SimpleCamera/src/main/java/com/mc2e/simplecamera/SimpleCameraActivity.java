@@ -41,7 +41,6 @@ public class SimpleCameraActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //mSurfaceView.getCamera().takePicture(null, null, mPicture);
                     takePicture();
                 }
                 return false;
@@ -120,19 +119,8 @@ public class SimpleCameraActivity extends Activity {
 
     private void takePicture() {
 
-        mSurfaceView.getCamera().autoFocus(new Camera.AutoFocusCallback() {
-
-            public void onAutoFocus(boolean success, Camera camera) {
-
-                if (success) {
-
-                    //mCamera.takePicture(null, null, null);
-                    mSurfaceView.getCamera().takePicture(null, null, mPicture);
-                }
-
-            }
-
-        });
+        // 전면 카메라가 오토포커싱이 안되는 문제로 그냥 사진을 찍어야됨
+        mSurfaceView.getCamera().takePicture(null, null, mPicture);
     }
 
     public byte[] bitmapToByteArray(Bitmap bitmap){

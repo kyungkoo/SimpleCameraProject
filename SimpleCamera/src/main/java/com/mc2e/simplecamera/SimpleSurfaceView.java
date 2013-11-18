@@ -31,7 +31,8 @@ public class SimpleSurfaceView extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        mCamera = Camera.open();
+        // 전면 카메라를 호출하기 위해 parameter 전달
+        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
 
         try {
             mCamera.setDisplayOrientation(90);
