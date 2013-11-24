@@ -1,7 +1,13 @@
 package com.mc2e.simplecamera;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.ExifInterface;
 
 /**
@@ -30,6 +36,7 @@ public class SimpleBitmapEditor {
         return Bitmap.createScaledBitmap(src, width, height, true);
     }
 
+    @Deprecated
     public static Bitmap cropBitmapToSize(Bitmap bitmap, int w, int h) {
 
         if(bitmap == null)
@@ -60,6 +67,39 @@ public class SimpleBitmapEditor {
             ch = height;
 
         return Bitmap.createBitmap(bitmap, x, y, cw, ch);
+    }
+
+    /**
+     * 타원으로 크롭하는 메소드
+     * @param bitmap
+     * @param w
+     * @param h
+     * @return
+     */
+    public static Bitmap cropBitmapToOval(Bitmap bitmap, int w, int h) {
+        Bitmap output;
+
+        int length = h;
+
+        output = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(output);
+
+        int margin = (length - w)/2;
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(margin, 0, w+margin, h);
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+
+        canvas.drawOval(rectF, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        return output;
     }
 
     public static Bitmap imgRotate(Bitmap bmp, int rotate){
