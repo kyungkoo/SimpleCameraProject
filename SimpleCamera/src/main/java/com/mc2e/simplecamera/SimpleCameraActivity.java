@@ -50,7 +50,7 @@ public class SimpleCameraActivity extends Activity {
 
     Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
-            String path = "/sdcard/DCIM/Camera/test"+counter+".jpg";
+            String path = "/sdcard/DCIM/Camera/test"+counter+".png";
 
             File file = new File(path);
             try {
@@ -58,7 +58,7 @@ public class SimpleCameraActivity extends Activity {
                 Bitmap factory = BitmapFactory.decodeByteArray(data, 0, data.length);
 
                 if(factory.getHeight() < factory.getWidth()){
-                    factory = SimpleBitmapEditor.imgRotate(factory, 90);
+                    factory = SimpleBitmapEditor.imgRotate(factory, -90);
                 }
 
                 int width = mGuideView.getWidth();
@@ -69,7 +69,9 @@ public class SimpleCameraActivity extends Activity {
 
                 Bitmap resize = SimpleBitmapEditor.resizeBitmap(factory, totalHeight);
 
-                Bitmap croped = SimpleBitmapEditor.cropBitmapToSize(resize, width, height);
+                //Bitmap croped = SimpleBitmapEditor.cropBitmapToSize(resize, width, height);
+
+                Bitmap croped = SimpleBitmapEditor.cropBitmapToOval(resize, width, height);
 
                 if (counter == 1) {
                     path1 = path;

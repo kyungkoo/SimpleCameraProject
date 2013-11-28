@@ -30,7 +30,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="#223344"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center" />
 
         <ImageView
             android:focusable="false"
@@ -38,14 +39,16 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="#225544"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"/>
 
         <ImageView
             android:focusable="false"
             android:id="@+id/right_iv"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="#222244"/>
+            android:background="#222244"
+            android:layout_gravity="center" />
     </LinearLayout>
 
 </RelativeLayout>
