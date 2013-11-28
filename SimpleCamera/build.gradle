@@ -25,4 +25,5 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.loopj.android:android-async-http:1.4.4'
+    compile 'com.github.chrisbanes.photoview:library:1.2.2'
 }
