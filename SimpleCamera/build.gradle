@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '18.1'
+    buildToolsVersion '18.0.1'
 
     defaultConfig {
         minSdkVersion 9
@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:+'
-    compile 'com.loopj.android:android-async-http:1.4.4'
-    compile 'com.github.chrisbanes.photoview:library:1.2.2'
+	compile 'com.android.support:appcompat-v7:+'
+	compile 'com.loopj.android:android-async-http:1.4.4'
+	compile 'com.github.chrisbanes.photoview:library:1.2.2'
 }

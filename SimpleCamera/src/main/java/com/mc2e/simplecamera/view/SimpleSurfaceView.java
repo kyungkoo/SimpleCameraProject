@@ -1,4 +1,4 @@
-package com.mc2e.simplecamera;
+package com.mc2e.simplecamera.view;
 
 import android.content.Context;
 import android.hardware.Camera;

@@ -1,4 +1,4 @@
-package com.mc2e.simplecamera;
+package com.mc2e.simplecamera.module;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -99,6 +99,32 @@ public class SimpleBitmapEditor {
         canvas.drawOval(rectF, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
+        return output;
+    }
+
+    public static Bitmap cropBitmapToOval(Bitmap bitmap, int w, int h, RectF rectf) {
+        Bitmap output;
+
+        int length = h;
+
+        output = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(output);
+
+        int margin = (length - w)/2;
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(margin, 0, w+margin, h);
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+
+        canvas.drawOval(rectF, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, null, rect, paint);
         return output;
     }
 
