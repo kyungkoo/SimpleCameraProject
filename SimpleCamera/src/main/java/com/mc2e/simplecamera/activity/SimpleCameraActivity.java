@@ -30,9 +30,11 @@ public class SimpleCameraActivity extends Activity {
 
     private View mGuideView;
 
-    private int counter = 1;
+    private int counter = 0;
 
     private String path1, path2, path3;
+
+    public static final int CAMERA_PREVIEW_REQUEST_CODE = 20131202;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +63,8 @@ public class SimpleCameraActivity extends Activity {
 
             Intent intent = new Intent(getApplicationContext(), CameraPreviewActivity.class);
             intent.putExtra("IMAGE_BYTE", data);
-            intent.putExtra("IMAGE_HEIGHT",mSurfaceView.getHeight());
-            startActivity(intent);
+            intent.putExtra("IMAGE_COUNT",counter);
+            startActivityForResult(intent, CAMERA_PREVIEW_REQUEST_CODE);
         }
     };
 
@@ -72,6 +74,47 @@ public class SimpleCameraActivity extends Activity {
         mSurfaceView.getCamera().takePicture(null, null, mPicture);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == CAMERA_PREVIEW_REQUEST_CODE) {
+
+            String filePath = data.getStringExtra("FILE_PATH");
+
+            switch (counter) {
+                case 0:
+                    path1 = filePath;
+                    counter++;
+                    break;
+
+                case 1:
+                    path2 = filePath;
+                    counter++;
+                    break;
+                case 2:
+                    path3 = filePath;
+                    sendResult();
+                    break;
+            }
+        }
+    }
+
+    private void sendResult() {
+        Intent i = new Intent();
+        i.putExtra("PATH1", path1);
+        i.putExtra("PATH2", path2);
+        i.putExtra("PATH3", path3);
+
+        //i.putExtras(bundle);
+
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    // Deprecated Code
+    @Deprecated
     public byte[] bitmapToByteArray(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -79,6 +122,7 @@ public class SimpleCameraActivity extends Activity {
         return byteArray;
     }
 
+    @Deprecated
     private void savePicture(byte[] data) {
         String path = "/sdcard/DCIM/Camera/test"+counter+".png";
 
@@ -98,8 +142,6 @@ public class SimpleCameraActivity extends Activity {
             int totalHeight = mSurfaceView.getHeight();
 
             Bitmap resize = SimpleBitmapEditor.resizeBitmap(factory, totalHeight);
-
-            //Bitmap croped = SimpleBitmapEditor.cropBitmapToSize(resize, width, height);
 
             Bitmap croped = SimpleBitmapEditor.cropBitmapToOval(resize, width, height);
 

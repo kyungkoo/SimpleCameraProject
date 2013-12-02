@@ -1,6 +1,7 @@
 package com.mc2e.simplecamera.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
@@ -24,22 +25,20 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created by mc2e on 2013. 11. 30..
  */
-public class CameraPreviewActivity extends Activity implements View.OnClickListener, PhotoViewAttacher.OnMatrixChangedListener {
+public class CameraPreviewActivity extends Activity implements View.OnClickListener {
 
     private ImageView mPicturePreview;
     private PhotoViewAttacher mAttacher;
-
-    private RectF mRectF;
 
     private Button mSaveBtn;
 
     private Bitmap mFactory  = null;
 
-    private View mGudeView;
+    private View mGuideView;
 
     private FrameLayout mFrameView, mImageFrame;
 
-    private int mHeight;
+    private int mCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +51,13 @@ public class CameraPreviewActivity extends Activity implements View.OnClickListe
 
         mFrameView = (FrameLayout)findViewById(R.id.frame_view);
 
-        mGudeView = findViewById(R.id.pre_guide_view);
+        mGuideView = findViewById(R.id.pre_guide_view);
 
         mSaveBtn = (Button)findViewById(R.id.crop_and_save_btn);
 
         byte[] imageData = getIntent().getByteArrayExtra("IMAGE_BYTE");
 
-        mHeight = getIntent().getIntExtra("IMAGE_HEIGHT", 0);
+        mCount = getIntent().getIntExtra("IMAGE_COUNT", 0);
 
         mFactory = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
 
@@ -71,7 +70,6 @@ public class CameraPreviewActivity extends Activity implements View.OnClickListe
         mPicturePreview.setImageBitmap(mFactory);
 
         mAttacher = new PhotoViewAttacher(mPicturePreview);
-        mAttacher.setOnMatrixChangeListener(this);
         mSaveBtn.setOnClickListener(this);
     }
 
@@ -80,7 +78,8 @@ public class CameraPreviewActivity extends Activity implements View.OnClickListe
 
         if (v.getId() == R.id.crop_and_save_btn) {
 
-            String path = "/sdcard/DCIM/Camera/test_image_.png";
+            // 저장할 file Path 지정
+            String path = "/sdcard/DCIM/Camera/face_image_"+mCount+".png";
 
             File file = new File(path);
 
@@ -88,7 +87,7 @@ public class CameraPreviewActivity extends Activity implements View.OnClickListe
 
             Bitmap scaledBitmap = mImageFrame.getDrawingCache(false);
 
-            Bitmap changedBitmap = SimpleBitmapEditor.cropBitmapToOval(scaledBitmap, mGudeView.getWidth(), mGudeView.getHeight());
+            Bitmap changedBitmap = SimpleBitmapEditor.cropBitmapToOval(scaledBitmap, mGuideView.getWidth(), mGuideView.getHeight());
 
             try {
                 FileOutputStream fos = new FileOutputStream(file);
@@ -102,13 +101,12 @@ public class CameraPreviewActivity extends Activity implements View.OnClickListe
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), "Failded!", Toast.LENGTH_SHORT).show();
             }
+
+            Intent intent = new Intent();
+            intent.putExtra("FILE_PATH", path);
+            setResult(RESULT_OK, intent);
+            finish();
         }
-    }
-
-    @Override
-    public void onMatrixChanged(RectF rectF) {
-
-        mRectF = rectF;
     }
 
     public byte[] bitmapToByteArray(Bitmap bitmap){
