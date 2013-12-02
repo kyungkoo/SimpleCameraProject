@@ -98,7 +98,7 @@ public class SimpleBitmapEditor {
 
         canvas.drawOval(rectF, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
+        canvas.drawBitmap(bitmap, null, rectF, paint);
         return output;
     }
 

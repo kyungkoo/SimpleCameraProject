@@ -5,15 +5,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.mc2e.simplecamera.R;
 import com.mc2e.simplecamera.module.SimpleBitmapEditor;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -33,7 +37,7 @@ public class CameraPreviewActivity extends Activity implements View.OnClickListe
 
     private View mGudeView;
 
-    private FrameLayout mFrameView;
+    private FrameLayout mFrameView, mImageFrame;
 
     private int mHeight;
 
@@ -43,6 +47,8 @@ public class CameraPreviewActivity extends Activity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_camera_preview);
+
+        mImageFrame = (FrameLayout)findViewById(R.id.image_frame);
 
         mFrameView = (FrameLayout)findViewById(R.id.frame_view);
 
@@ -74,32 +80,28 @@ public class CameraPreviewActivity extends Activity implements View.OnClickListe
 
         if (v.getId() == R.id.crop_and_save_btn) {
 
-           // mPicturePreview.setImageMatrix(mAttacher.getDisplayMatrix());
+            String path = "/sdcard/DCIM/Camera/test_image_.png";
 
-//            String path = "/sdcard/DCIM/Camera/test_image_.png";
-//
-//            File file = new File(path);
-//
-//            Log.w("This===================", mRectF.toString());
-//
-//            Bitmap temp = Bitmap.createBitmap(mFactory, 0,0,mGudeView.getWidth(), mGudeView.getHeight(), mAttacher.getDisplayMatrix(), false);
-//
-//            Bitmap changedBitmap = SimpleBitmapEditor.cropBitmapToOval(temp, mGudeView.getWidth(), mGudeView.getHeight(), mRectF);
-//
-//            //Bitmap changedBitmap = SimpleBitmapEditor.cropBitmapToOval(mFactory, mGudeView.getWidth(), mGudeView.getHeight());
-//
-//            try {
-//                FileOutputStream fos = new FileOutputStream(file);
-//
-//                fos.write(bitmapToByteArray(changedBitmap));
-//                fos.flush();
-//                fos.close();
-//
-//                Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
-//            }catch(Exception e) {
-//                e.printStackTrace();
-//                Toast.makeText(getApplicationContext(), "Failded!", Toast.LENGTH_SHORT).show();
-//            }
+            File file = new File(path);
+
+            mImageFrame.setDrawingCacheEnabled(true);
+
+            Bitmap scaledBitmap = mImageFrame.getDrawingCache(false);
+
+            Bitmap changedBitmap = SimpleBitmapEditor.cropBitmapToOval(scaledBitmap, mGudeView.getWidth(), mGudeView.getHeight());
+
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+
+                fos.write(bitmapToByteArray(changedBitmap));
+                fos.flush();
+                fos.close();
+
+                Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+            }catch(Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Failded!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
